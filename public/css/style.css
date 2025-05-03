@@ -1,0 +1,10 @@
+.btn-back {
+    background-color: #dc3545;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 15px;
+    font-size: 16px;
+}
