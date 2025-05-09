@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Obat</title>
+    <title>Data Pasien</title>
     <style>
         * {
             margin: 0;
@@ -111,6 +111,11 @@
             background-color: #f4f4f4;
         }
 
+        .sidebar ul li a:hover,
+        .sidebar ul li a.active {
+            background-color: #0056b3;
+        }
+
         .actions button {
             padding: 5px 10px;
             font-size: 14px;
@@ -137,9 +142,21 @@
             background-color: #c82333;
         }
 
-        .sidebar ul li a:hover,
-        .sidebar ul li a.active {
-            background-color: #0056b3;
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .alert-success {
+            background-color: #28a745;
+            color: #ffffff;
+        }
+
+        .alert-error {
+            background-color: #dc3545;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -160,35 +177,37 @@
         <img src="https://via.placeholder.com/200x150" alt="Sistem Informasi Rekam Medis">
     </div>
     <div class="container">
-        <h1>Data Obat</h1>
-        <div class="button-container">
-            <a href="{{ route('admin.tambah-obat') }}"><button class="button">Tambah Obat</button></a>
+        @if(session()->has('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
         </div>
-        <table id="medicineTable">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Obat</th>
-                    <th>Stok</th>
-                    <th>Jenis</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($obat as $key => $p)
-                <tr>
-                    <td>{{ $key + 1}}</td>
-                    <td>{{ $p->nama_obat }}</td>
-                    <td>{{ $p->stok }}</td>
-                    <td>{{ $p->jenis }}</td>
-                    <td class="actions">
-                        <a href="/admin/edit-obat/{{ $p->id }}"><button class="edit">Edit</button></a>
-                        <a href="/admin/hapus-obat/{{ $p->id }}"><button class="delete">Hapus</button></a>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        @endif
+
+        @if(session()->has('error'))
+        <div class="alert alert-error">
+            {{ session('error') }}
+        </div>
+        @endif
+        <h1>Edit Obat</h1>
+        <form action="{{ route('admin.edit-obat', $obat->id) }}" method="POST">
+            @csrf
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                <div>
+                    <label for="nama_obat" style="margin-bottom: 5px;">Nama Obat</label>
+                    <input type="text" id="nama_obat" name="nama_obat" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ $obat->nama_obat }}" required>
+                </div>
+                <div>
+                    <label for="stok" style="margin-bottom: 5px;">Stok</label>
+                    <input type="number" id="stok" name="stok" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ $obat->stok }}" required>
+                </div>
+                <div>
+                    <label for="jenis" style="margin-bottom: 5px;">jenis</label>
+                    <textarea id="jenis" name="jenis" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>{{ $obat->jenis }}</textarea>
+                </div>
+            </div>
+            <button type="submit" style="background-color: #007bff; margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Simpan Data Pasien</button>
+        </form>
+        <a href="{{ route('admin.pasien') }}"><button type="button" style="background-color:rgb(255, 0, 0); margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Kembali</button></a>
     </div>
 </body>
 

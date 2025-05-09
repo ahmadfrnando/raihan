@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dokter;
+use App\Models\JadwalDokter;
 use App\Models\Obat;
 use App\Models\Pasien;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -42,30 +48,352 @@ class AdminController extends Controller
             ], 404);
         }
     }
+
     public function pasien(Request $request)
     {
         if ($request->isMethod('get')) {
-            return view('admin.data-pasien');
+            $pasien = Pasien::all();
+            return view('admin.data-pasien', compact('pasien'));
         }
     }
-    public function obat(Request $request)
+
+    public function tambahPasien(Request $request)
     {
         if ($request->isMethod('get')) {
-            return view('admin.data-obat');
+            return view('admin.form-tambah-pasien');
+        }
+
+        if ($request->isMethod('post')) {
+            try {
+                $data = $request->validate([
+                    'nama' => 'required|string',
+                    'nik' => 'required|string',
+                    'no_telp' => 'required|string',
+                    'alamat' => 'required|string',
+                    'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+                    'tempat_lahir' => 'required|string',
+                    'tgl_lahir' => 'required|date',
+                ]);
+
+                $usia = date('Y') - date('Y', strtotime($data['tgl_lahir']));
+
+                Pasien::create([
+                    'nama' => $data['nama'],
+                    'nik' => $data['nik'],
+                    'no_telp' => $data['no_telp'],
+                    'alamat' => $data['alamat'],
+                    'jenis_kelamin' => $data['jenis_kelamin'],
+                    'tempat_lahir' => $data['tempat_lahir'],
+                    'tgl_lahir' => $data['tgl_lahir'],
+                    'usia' => $usia,
+                ]);
+                return redirect()->route('admin.tambah-pasien')->with('success', 'Data pasien berhasil ditambahkan');
+            } catch (\Throwable $th) {
+                return redirect()->route('admin.tambah-pasien')->with('error', 'Data pasien gagal ditambahkan ' . $th->getMessage())->withInput();
+            }
         }
     }
+
+    public function editPasien(Request $request, $id)
+    {
+        if ($request->isMethod('get')) {
+            $pasien = Pasien::find($id);
+            return view('admin.form-edit-pasien', compact('pasien'));
+        }
+
+        if ($request->isMethod('post')) {
+            try {
+                $data = $request->validate([
+                    'nama' => 'required|string',
+                    'nik' => 'required|string',
+                    'no_telp' => 'required|string',
+                    'alamat' => 'required|string',
+                    'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+                    'tempat_lahir' => 'required|string',
+                    'tgl_lahir' => 'required|date',
+                ]);
+
+                $usia = date('Y') - date('Y', strtotime($data['tgl_lahir']));
+
+                Pasien::where('id', $id)->update([
+                    'nama' => $data['nama'],
+                    'nik' => $data['nik'],
+                    'no_telp' => $data['no_telp'],
+                    'alamat' => $data['alamat'],
+                    'jenis_kelamin' => $data['jenis_kelamin'],
+                    'tempat_lahir' => $data['tempat_lahir'],
+                    'tgl_lahir' => $data['tgl_lahir'],
+                    'usia' => $usia,
+                ]);
+                return redirect()->route('admin.edit-pasien', $id)->with('success', 'Data pasien berhasil diubah');
+            } catch (\Throwable $th) {
+                return redirect()->route('admin.edit-pasien', $id)->with('error', 'Data pasien gagal diubah ' . $th->getMessage());
+            }
+        }
+    }
+
+    public function hapusPasien($id)
+    {
+        try {
+            Pasien::where('id', $id)->delete();
+            return redirect()->route('admin.pasien')->with('success', 'Data pasien berhasil dihapus');
+        } catch (\Throwable $th) {
+            return redirect()->route('admin.pasien')->with('error', 'Data pasien gagal dihapus ' . $th->getMessage());
+        }
+    }
+
     public function dokter(Request $request)
     {
         if ($request->isMethod('get')) {
-            return view('admin.data-pasien');
+            $dokter = Dokter::all();
+            return view('admin.data-dokter', compact('dokter'));
         }
     }
+
+    public function tambahDokter(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            return view('admin.form-tambah-dokter');
+        }
+
+        if ($request->isMethod('post')) {
+            try {
+                $data = $request->validate([
+                    'nama_dokter' => 'required|string',
+                    'nip' => 'required|string|unique:dokter,nip',
+                    'spesialis' => 'required|string',
+                    'foto_dokter' => 'required|mimes:jpg,jpeg,png|max:2048',
+                ]);
+                $file = $request->file('foto_dokter');
+                $fileName = $file->hashName();
+                $file->storeAs('foto-dokter', $fileName, 'public');
+
+                User::create([
+                    'name' => $data['nama_dokter'],
+                    'username' => $data['nip'],
+                    'password' => Hash::make('123'),
+                    'role' => 'dokter',
+                    'email' => $data['nip'] . '@test.com',
+                ]);
+
+                Dokter::create([
+                    'nama_dokter' => $data['nama_dokter'],
+                    'id_user' => User::where('username', $data['nip'])->first()->id,
+                    'nip' => $data['nip'],
+                    'spesialis' => $data['spesialis'],
+                    'foto_dokter' => $fileName,
+                ]);
+                return redirect()->route('admin.tambah-dokter')->with('success', 'Data dokter berhasil ditambahkan');
+            } catch (\Throwable $th) {
+                return redirect()->route('admin.tambah-dokter')->with('error', 'Data dokter gagal ditambahkan ' . $th->getMessage())->withInput();
+            }
+        }
+    }
+
+    public function editDokter(Request $request, $id)
+    {
+        if ($request->isMethod('get')) {
+            $dokter = Dokter::find($id);
+            return view('admin.form-edit-dokter', compact('dokter'));
+        }
+
+        if ($request->isMethod('post')) {
+            DB::beginTransaction();
+            try {
+                $data = $request->validate([
+                    'nama_dokter' => 'required|string',
+                    'nip' => 'required|string',
+                    'spesialis' => 'required|string',
+                    'foto_dokter' => 'required|string',
+                ]);
+
+                Dokter::where('id', $id)->update([
+                    'nama_dokter' => $data['nama_dokter'],
+                    'nip' => $data['nip'],
+                    'spesialis' => $data['spesialis'],
+                    'foto_dokter' => $data['foto_dokter'],
+                ]);
+
+                DB::commit();
+                return redirect()->route('admin.edit-dokter', $id)->with('success', 'Data dokter berhasil diubah');
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                return redirect()->route('admin.edit-dokter', $id)->with('error', 'Data dokter gagal diubah ' . $th->getMessage());
+            }
+        }
+    }
+
+    public function hapusDokter($id)
+    {
+        try {
+            User::where('id', Dokter::where('id', $id)->first()->id_user)->delete();
+            Dokter::where('id', $id)->delete();
+            return redirect()->route('admin.dokter')->with('success', 'Data dokter berhasil dihapus');
+        } catch (\Throwable $th) {
+            return redirect()->route('admin.dokter')->with('error', 'Data dokter gagal dihapus ' . $th->getMessage());
+        }
+    }
+
+    public function obat(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            $obat = Obat::all();
+            return view('admin.data-obat', compact('obat'));
+        }
+    }
+
+    public function tambahObat(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            return view('admin.form-tambah-obat');
+        }
+
+        if ($request->isMethod('post')) {
+            try {
+                $data = $request->validate([
+                    'nama_obat' => 'required|string',
+                    'stok' => 'required|numeric',
+                    'jenis' => 'required|string',
+                ]);
+
+                Obat::create([
+                    'nama_obat' => $data['nama_obat'],
+                    'stok' => $data['stok'],
+                    'jenis' => $data['jenis'],
+                ]);
+                return redirect()->route('admin.tambah-obat')->with('success', 'Data obat berhasil ditambahkan');
+            } catch (\Throwable $th) {
+                return redirect()->route('admin.tambah-obat')->with('error', 'Data obat gagal ditambahkan ' . $th->getMessage())->withInput();
+            }
+        }
+    }
+
+    public function editObat(Request $request, $id)
+    {
+        if ($request->isMethod('get')) {
+            $obat = Obat::find($id);
+            return view('admin.form-edit-obat', compact('obat'));
+        }
+
+        if ($request->isMethod('post')) {
+            try {
+                $data = $request->validate([
+                    'nama' => 'required|string',
+                    'nik' => 'required|string',
+                    'no_telp' => 'required|string',
+                    'alamat' => 'required|string',
+                    'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+                    'tempat_lahir' => 'required|string',
+                    'tgl_lahir' => 'required|date',
+                ]);
+
+                $usia = date('Y') - date('Y', strtotime($data['tgl_lahir']));
+
+                Obat::where('id', $id)->update([
+                    'nama' => $data['nama'],
+                    'nik' => $data['nik'],
+                    'no_telp' => $data['no_telp'],
+                    'alamat' => $data['alamat'],
+                    'jenis_kelamin' => $data['jenis_kelamin'],
+                    'tempat_lahir' => $data['tempat_lahir'],
+                    'tgl_lahir' => $data['tgl_lahir'],
+                    'usia' => $usia,
+                ]);
+                return redirect()->route('admin.edit-obat', $id)->with('success', 'Data obat berhasil diubah');
+            } catch (\Throwable $th) {
+                return redirect()->route('admin.edit-obat', $id)->with('error', 'Data obat gagal diubah ' . $th->getMessage());
+            }
+        }
+    }
+
+    public function hapusObat($id)
+    {
+        try {
+            Obat::where('id', $id)->delete();
+            return redirect()->route('admin.obat')->with('success', 'Data obat berhasil dihapus');
+        } catch (\Throwable $th) {
+            return redirect()->route('admin.obat')->with('error', 'Data obat gagal dihapus ' . $th->getMessage());
+        }
+    }
+
     public function jadwalDokter(Request $request)
     {
         if ($request->isMethod('get')) {
-            return view('admin.data-pasien');
+            $jadwal = JadwalDokter::with('dokter')->get();
+            $dokter = Dokter::all();
+            return view('admin.jadwal-dokter', compact('jadwal', 'dokter'));
         }
     }
+
+    public function tambahJadwalDokter(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            $dokter = Dokter::all();
+            return view('admin.form-tambah-jadwal-dokter', compact('dokter'));
+        }
+
+        if ($request->isMethod('post')) {
+            try {
+                $data = $request->validate([
+                    'id_dokter' => 'required|exists:dokter,id',
+                    'id_hari' => 'required|in:1,2,3,4,5,6,7',
+                    'waktu_mulai' => 'required|date_format:H:i',
+                    'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
+                ]);
+
+                JadwalDokter::create([
+                    'id_dokter' => $data['id_dokter'],
+                    'id_hari' => $data['id_hari'],
+                    'waktu_mulai' => $data['waktu_mulai'],
+                    'waktu_selesai' => $data['waktu_selesai'],
+                ]);
+                return redirect()->route('admin.edit-jadwal-dokter')->with('success', 'Data jadwal dokter berhasil ditambahkan');
+            } catch (\Throwable $th) {
+                return redirect()->route('admin.edit-jadwal-dokter')->with('error', 'Data jadwal dokter gagal ditambahkan ' . $th->getMessage())->withInput();
+            }
+        }
+    }
+
+    public function editJadwalDokter(Request $request, $id)
+    {
+        if ($request->isMethod('get')) {
+            $jadwal = JadwalDokter::find($id);
+            $dokter = Dokter::all();
+            return view('admin.form-edit-jadwal-dokter', compact('jadwal', 'dokter'));
+        }
+
+        if ($request->isMethod('post')) {
+            try {
+                $data = $request->validate([
+                    'id_dokter' => 'required|exists:dokter,id',
+                    'id_hari' => 'required|in:1,2,3,4,5,6,7',
+                    'waktu_mulai' => 'required|date_format:H:i',
+                    'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
+                ]);
+
+                JadwalDokter::where('id', $id)->update([
+                    'id_dokter' => $data['id_dokter'],
+                    'id_hari' => $data['id_hari'],
+                    'waktu_mulai' => $data['waktu_mulai'],
+                    'waktu_selesai' => $data['waktu_selesai'],
+                ]);
+                return redirect()->route('admin.edit-jadwal-dokter', $id)->with('success', 'Data jadwal dokter berhasil diubah');
+            } catch (\Throwable $th) {
+                return redirect()->route('admin.edit-jadwal-dokter', $id)->with('error', 'Data jadwal dokter gagal diubah ' . $th->getMessage());
+            }
+        }
+    }
+
+    public function hapusJadwalDokter($id)
+    {
+        try {
+            JadwalDokter::where('id', $id)->delete();
+            return redirect()->route('admin.jadwal-dokter')->with('success', 'Data jadwal dokter berhasil dihapus');
+        } catch (\Throwable $th) {
+            return redirect()->route('admin.jadwal-dokter')->with('error', 'Data jadwal dokter gagal dihapus ' . $th->getMessage());
+        }
+    }
+
     public function ambulans(Request $request)
     {
         if ($request->isMethod('get')) {

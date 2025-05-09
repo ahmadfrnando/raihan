@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Obat</title>
+    <title>Data Pasien</title>
     <style>
         * {
             margin: 0;
@@ -111,6 +111,11 @@
             background-color: #f4f4f4;
         }
 
+        .sidebar ul li a:hover,
+        .sidebar ul li a.active {
+            background-color: #0056b3;
+        }
+
         .actions button {
             padding: 5px 10px;
             font-size: 14px;
@@ -137,9 +142,20 @@
             background-color: #c82333;
         }
 
-        .sidebar ul li a:hover,
-        .sidebar ul li a.active {
-            background-color: #0056b3;
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .alert-success {
+            background-color: #28a745;
+            color: #ffffff;
+        }
+
+        .alert-error {
+            background-color: #dc3545;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -149,9 +165,9 @@
         <h2>Puskesmas Binjai Estate</h2>
         <ul>
             <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ route('admin.pasien') }}">Data Pasien</a></li>
-            <li><a href="{{ route('admin.obat') }}" class="active">Data Obat</a></li>
-            <li><a href="{{ route('admin.dokter') }}">Dokter</a></li>
+            <li><a href="{{ route('admin.pasien') }}" >Data Pasien</a></li>
+            <li><a href="{{ route('admin.obat') }}">Data Obat</a></li>
+            <li><a href="{{ route('admin.dokter') }}" class="active">Dokter</a></li>
             <li><a href="{{ route('admin.jadwal-dokter') }}">Jadwal Dokter</a></li>
             <li><a href="{{ route('admin.ambulans') }}">Pengajuan Ambulance</a></li>
             <li><a href="{{ route('admin.profil') }}">Profil</a></li>
@@ -160,30 +176,45 @@
         <img src="https://via.placeholder.com/200x150" alt="Sistem Informasi Rekam Medis">
     </div>
     <div class="container">
-        <h1>Data Obat</h1>
-        <div class="button-container">
-            <a href="{{ route('admin.tambah-obat') }}"><button class="button">Tambah Obat</button></a>
+        @if(session()->has('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
         </div>
-        <table id="medicineTable">
+        @endif
+
+        @if(session()->has('error'))
+        <div class="alert alert-error">
+            {{ session('error') }}
+        </div>
+        @endif
+        <h1>Data Dokter</h1>
+        <div class="button-container">
+            <a href="{{ route('admin.tambah-dokter') }}"><button class="button">Tambah Dokter</button></a>
+        </div>
+        <table id="patientTable">
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Nama Obat</th>
-                    <th>Stok</th>
-                    <th>Jenis</th>
+                    <th>NIP</th>
+                    <th>Nama Dokter</th>
+                    <th>Spesialis</th>
+                    <th>Foto Dokter</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($obat as $key => $p)
+                @foreach($dokter as $key => $p)
                 <tr>
                     <td>{{ $key + 1}}</td>
-                    <td>{{ $p->nama_obat }}</td>
-                    <td>{{ $p->stok }}</td>
-                    <td>{{ $p->jenis }}</td>
+                    <td>{{ $p->nip }}</td>
+                    <td>{{ $p->nama_dokter }}</td>
+                    <td>{{ $p->spesialis }}</td>
+                    <td>
+                        <img src="{{ asset('storage/foto-dokter/' . $p->foto_dokter) }}" alt="{{ $p->nama_dokter }}" style="width: 50px; height: 50px;">
+                    </td>
                     <td class="actions">
-                        <a href="/admin/edit-obat/{{ $p->id }}"><button class="edit">Edit</button></a>
-                        <a href="/admin/hapus-obat/{{ $p->id }}"><button class="delete">Hapus</button></a>
+                        <a href="/admin/edit-dokter/{{ $p->id }}"><button class="edit">Edit</button></a>
+                        <a href="/admin/hapus-dokter/{{ $p->id }}"><button class="delete">Hapus</button></a>
                     </td>
                 </tr>
                 @endforeach

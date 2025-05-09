@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Obat</title>
+    <title>Tambah Dokter</title>
     <style>
         * {
             margin: 0;
@@ -111,6 +111,11 @@
             background-color: #f4f4f4;
         }
 
+        .sidebar ul li a:hover,
+        .sidebar ul li a.active {
+            background-color: #0056b3;
+        }
+
         .actions button {
             padding: 5px 10px;
             font-size: 14px;
@@ -137,9 +142,21 @@
             background-color: #c82333;
         }
 
-        .sidebar ul li a:hover,
-        .sidebar ul li a.active {
-            background-color: #0056b3;
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .alert-success {
+            background-color: #28a745;
+            color: #ffffff;
+        }
+
+        .alert-error {
+            background-color: #dc3545;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -150,9 +167,9 @@
         <ul>
             <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
             <li><a href="{{ route('admin.pasien') }}">Data Pasien</a></li>
-            <li><a href="{{ route('admin.obat') }}" class="active">Data Obat</a></li>
-            <li><a href="{{ route('admin.dokter') }}">Dokter</a></li>
-            <li><a href="{{ route('admin.jadwal-dokter') }}">Jadwal Dokter</a></li>
+            <li><a href="{{ route('admin.obat') }}">Data Obat</a></li>
+            <li><a href="{{ route('admin.dokter') }} ">Dokter</a></li>
+            <li><a href="{{ route('admin.jadwal-dokter') }}" class="active">Jadwal Dokter</a></li>
             <li><a href="{{ route('admin.ambulans') }}">Pengajuan Ambulance</a></li>
             <li><a href="{{ route('admin.profil') }}">Profil</a></li>
             <li><a href="{{ route('logout') }}">Logout</a></li>
@@ -160,35 +177,55 @@
         <img src="https://via.placeholder.com/200x150" alt="Sistem Informasi Rekam Medis">
     </div>
     <div class="container">
-        <h1>Data Obat</h1>
-        <div class="button-container">
-            <a href="{{ route('admin.tambah-obat') }}"><button class="button">Tambah Obat</button></a>
+        @if(session()->has('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
         </div>
-        <table id="medicineTable">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Obat</th>
-                    <th>Stok</th>
-                    <th>Jenis</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($obat as $key => $p)
-                <tr>
-                    <td>{{ $key + 1}}</td>
-                    <td>{{ $p->nama_obat }}</td>
-                    <td>{{ $p->stok }}</td>
-                    <td>{{ $p->jenis }}</td>
-                    <td class="actions">
-                        <a href="/admin/edit-obat/{{ $p->id }}"><button class="edit">Edit</button></a>
-                        <a href="/admin/hapus-obat/{{ $p->id }}"><button class="delete">Hapus</button></a>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        @endif
+
+        @if(session()->has('error'))
+        <div class="alert alert-error">
+            {{ session('error') }}
+        </div>
+        @endif
+        <h1>Tambah Dokter</h1>
+        <form action="{{ route('admin.tambah-jadwal-dokter') }}" method="POST">
+            @csrf
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                <div>
+                    <label for="id_dokter" style="margin-bottom: 5px;">Dokter</label>
+                    <select id="id_dokter" name="id_dokter" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                        <option value="">-- Pilih Dokter --</option>
+                        @foreach ($dokter as $do)
+                        <option value="{{ $do->id }}">{{ $do->nama_dokter }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label for="id_hari" style="margin-bottom: 5px;">Hari</label>
+                    <select id="id_hari" name="id_hari" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                        <option value="">-- Pilih Hari --</option>
+                        <option value="1">Senin</option>
+                        <option value="2">Selasa</option>
+                        <option value="3">Rabu</option>
+                        <option value="4">Kamis</option>
+                        <option value="5">Jumat</option>
+                        <option value="6">Sabtu</option>
+                        <option value="7">Minggu</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="waktu_mulai" style="margin-bottom: 5px;">Jam Mulai</label>
+                    <input type="time" id="waktu_mulai" name="waktu_mulai" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                </div>
+                <div>
+                    <label for="waktu_selesai" style="margin-bottom: 5px;">Jam Selesai</label>
+                    <input type="time" id="waktu_selesai" name="waktu_selesai" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                </div>
+            </div>
+            <button type="submit" style="background-color: #007bff; margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Simpan Data Jadwal</button>
+        </form>
+        <a href="{{ route('admin.jadwal-dokter') }}"><button type="button" style="background-color:rgb(255, 0, 0); margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Kembali</button></a>
     </div>
 </body>
 

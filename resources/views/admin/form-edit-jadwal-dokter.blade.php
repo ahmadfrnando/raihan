@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Pasien</title>
+    <title>Edit Dokter</title>
     <style>
         * {
             margin: 0;
@@ -144,8 +144,9 @@
 
         .alert {
             padding: 15px;
-            margin-bottom: 20px;
             border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 16px;
         }
 
         .alert-success {
@@ -165,10 +166,10 @@
         <h2>Puskesmas Binjai Estate</h2>
         <ul>
             <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ route('admin.pasien') }}" class="active">Data Pasien</a></li>
+            <li><a href="{{ route('admin.pasien') }}">Data Pasien</a></li>
             <li><a href="{{ route('admin.obat') }}">Data Obat</a></li>
-            <li><a href="{{ route('admin.dokter') }}">Dokter</a></li>
-            <li><a href="{{ route('admin.jadwal-dokter') }}">Jadwal Dokter</a></li>
+            <li><a href="{{ route('admin.dokter') }} ">Dokter</a></li>
+            <li><a href="{{ route('admin.jadwal-dokter') }}" class="active">Jadwal Dokter</a></li>
             <li><a href="{{ route('admin.ambulans') }}">Pengajuan Ambulance</a></li>
             <li><a href="{{ route('admin.profil') }}">Profil</a></li>
             <li><a href="{{ route('logout') }}">Logout</a></li>
@@ -187,37 +188,44 @@
             {{ session('error') }}
         </div>
         @endif
-        <h1>Data Pasien</h1>
-        <div class="button-container">
-            <a href="{{ route('admin.tambah-pasien') }}"><button class="button">Tambah Pasien</button></a>
-        </div>
-        <table id="patientTable">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Umur</th>
-                    <th>Jenkel</th>
-                    <th>Kondisi</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($pasien as $key => $p)
-                <tr>
-                    <td>{{ $key + 1}}</td>
-                    <td>{{ $p->nama }}</td>
-                    <td>{{ $p->usia }}</td>
-                    <td>{{ $p->jenis_kelamin }}</td>
-                    <td>{{ $p->status }}</td>
-                    <td class="actions">
-                        <a href="/admin/edit-pasien/{{ $p->id }}"><button class="edit">Edit</button></a>
-                        <a href="/admin/hapus-pasien/{{ $p->id }}"><button class="delete">Hapus</button></a>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <h1>Edit Dokter</h1>
+        <form action="{{ route('admin.edit-jadwal-dokter', $jadwal->id) }}" method="POST">
+            @csrf
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                <div>
+                    <label for="id_dokter" style="margin-bottom: 5px;">Dokter</label>
+                    <select id="id_dokter" name="id_dokter" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                        <option value="{{ $jadwal->id_dokter }}">{{ $jadwal->dokter->nama_dokter }}</option>
+                        @foreach ($dokter as $do)
+                        <option value="{{ $do->id }}">{{ $do->nama_dokter }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label for="id_hari" style="margin-bottom: 5px;">Hari</label>
+                    <select id="id_hari" name="id_hari" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                        <option value="{{ $jadwal->id_hari }}">{{ $jadwal->hari() }}</option>
+                        <option value="1">Senin</option>
+                        <option value="2">Selasa</option>
+                        <option value="3">Rabu</option>
+                        <option value="4">Kamis</option>
+                        <option value="5">Jumat</option>
+                        <option value="6">Sabtu</option>
+                        <option value="7">Minggu</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="waktu_mulai" style="margin-bottom: 5px;">Jam Mulai</label>
+                    <input type="time" id="waktu_mulai" name="waktu_mulai" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                </div>
+                <div>
+                    <label for="waktu_selesai" style="margin-bottom: 5px;">Jam Selesai</label>
+                    <input type="time" id="waktu_selesai" name="waktu_selesai" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                </div>
+            </div>
+            <button type="submit" style="background-color: #007bff; margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Simpan Data Jadwal</button>
+        </form>
+        <a href="{{ route('admin.jadwal-dokter') }}"><button type="button" style="background-color:rgb(255, 0, 0); margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Kembali</button></a>
     </div>
 </body>
 

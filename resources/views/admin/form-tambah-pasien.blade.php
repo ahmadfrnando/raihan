@@ -144,8 +144,9 @@
 
         .alert {
             padding: 15px;
-            margin-bottom: 20px;
             border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 16px;
         }
 
         .alert-success {
@@ -187,37 +188,46 @@
             {{ session('error') }}
         </div>
         @endif
-        <h1>Data Pasien</h1>
-        <div class="button-container">
-            <a href="{{ route('admin.tambah-pasien') }}"><button class="button">Tambah Pasien</button></a>
-        </div>
-        <table id="patientTable">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Umur</th>
-                    <th>Jenkel</th>
-                    <th>Kondisi</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($pasien as $key => $p)
-                <tr>
-                    <td>{{ $key + 1}}</td>
-                    <td>{{ $p->nama }}</td>
-                    <td>{{ $p->usia }}</td>
-                    <td>{{ $p->jenis_kelamin }}</td>
-                    <td>{{ $p->status }}</td>
-                    <td class="actions">
-                        <a href="/admin/edit-pasien/{{ $p->id }}"><button class="edit">Edit</button></a>
-                        <a href="/admin/hapus-pasien/{{ $p->id }}"><button class="delete">Hapus</button></a>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <h1>Tambah Pasien</h1>
+        <form action="{{ route('admin.tambah-pasien') }}" method="POST">
+            @csrf
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                <div>
+                    <label for="nama" style="margin-bottom: 5px;">Nama</label>
+                    <input type="text" id="nama" name="nama" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('nama') }}" required>
+                </div>
+                <div>
+                    <label for="nik" style="margin-bottom: 5px;">NIK</label>
+                    <input type="text" id="nik" name="nik" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('nik') }}" required>
+                </div>
+                <div>
+                    <label for="alamat" style="margin-bottom: 5px;">Alamat</label>
+                    <textarea id="alamat" name="alamat" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"  value="{{ old('alamat') }}" required></textarea>
+                </div>
+                <div>
+                    <label for="no_telp" style="margin-bottom: 5px;">Nomor Telepon</label>
+                    <input type="number" id="no_telp" name="no_telp" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('no_telp') }}" required>
+                </div>
+                <div>
+                    <label for="jenis_kelamin" style="margin-bottom: 5px;">Jenis Kelamin</label>
+                    <select id="jenis_kelamin" name="jenis_kelamin" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                        <option value="" {{ old('jenis_kelamin') == '' ? 'selected' : '' }}>-- Pilih --</option>
+                        <option value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="tgl_lahir" style="margin-bottom: 5px;">Tanggal Lahir</label>
+                    <input type="date" id="tgl_lahir" name="tgl_lahir" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('tgl_lahir') }}" required>
+                </div>
+                <div>
+                    <label for="tempat_lahir" style="margin-bottom: 5px;">Tempat Lahir</label>
+                    <input type="text" id="tempat_lahir" name="tempat_lahir" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('tempat_lahir') }}" required>
+                </div>
+            </div>
+            <button type="submit" style="background-color: #007bff; margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Simpan Data Pasien</button>
+        </form>
+        <a href="{{ route('admin.pasien') }}"><button type="button" style="background-color:rgb(255, 0, 0); margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Kembali</button></a>
     </div>
 </body>
 

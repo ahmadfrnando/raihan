@@ -8,12 +8,23 @@ class JadwalDokter extends Model
 {
     protected $table = 'jadwal_dokter';
 
-    protected $fillable = [
-        'id',
-        'nama_dlis',
-        'id_harokter',
-        'spesiai',
-        'waktu_mulai',
-        'waktu_selesai',
-    ];
+    protected $guarded = [];
+
+    public function dokter()
+    {
+        return $this->belongsTo(Dokter::class, 'id_dokter');
+    }
+
+    public function hari()
+    {
+        return match ($this->id_hari) {
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+            6 => 'Sabtu',
+            7 => 'Minggu',
+        };
+    }
 }
