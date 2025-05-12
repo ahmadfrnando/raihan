@@ -165,7 +165,7 @@
         <h2>Puskesmas Binjai Estate</h2>
         <ul>
             <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ route('admin.pasien') }}" >Data Pasien</a></li>
+            <li><a href="{{ route('admin.pasien') }}">Data Pasien</a></li>
             <li><a href="{{ route('admin.obat') }}">Data Obat</a></li>
             <li><a href="{{ route('admin.dokter') }}" class="active">Dokter</a></li>
             <li><a href="{{ route('admin.jadwal-dokter') }}">Jadwal Dokter</a></li>
@@ -173,7 +173,7 @@
             <li><a href="{{ route('admin.profil') }}">Profil</a></li>
             <li><a href="{{ route('logout') }}">Logout</a></li>
         </ul>
-        <img src="https://via.placeholder.com/200x150" alt="Sistem Informasi Rekam Medis">
+        <img src="{{ asset('img/ill_sidebar.svg') }}" alt="Sistem Informasi Rekam Medis">
     </div>
     <div class="container">
         @if(session()->has('success'))

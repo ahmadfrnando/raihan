@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Pasien</title>
+    <title>Edit Pengajuan Ambulans</title>
     <style>
         * {
             margin: 0;
@@ -166,11 +166,11 @@
         <h2>Puskesmas Binjai Estate</h2>
         <ul>
             <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ route('admin.pasien') }}" class="active">Data Pasien</a></li>
+            <li><a href="{{ route('admin.pasien') }}">Data Pasien</a></li>
             <li><a href="{{ route('admin.obat') }}">Data Obat</a></li>
-            <li><a href="{{ route('admin.dokter') }}">Dokter</a></li>
+            <li><a href="{{ route('admin.dokter') }} ">Dokter</a></li>
             <li><a href="{{ route('admin.jadwal-dokter') }}">Jadwal Dokter</a></li>
-            <li><a href="{{ route('admin.ambulans') }}">Pengajuan Ambulance</a></li>
+            <li><a href="{{ route('admin.ambulans') }}" class="active">Pengajuan Ambulance</a></li>
             <li><a href="{{ route('admin.profil') }}">Profil</a></li>
             <li><a href="{{ route('logout') }}">Logout</a></li>
         </ul>
@@ -188,46 +188,54 @@
             {{ session('error') }}
         </div>
         @endif
-        <h1>Tambah Pasien</h1>
-        <form action="{{ route('admin.tambah-pasien') }}" method="POST">
+        <h1>Edit Dokter</h1>
+        <form action="{{ route('admin.edit-pengajuan-ambulans', $pengajuan->id) }}" method="POST">
             @csrf
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
                 <div>
-                    <label for="nama" style="margin-bottom: 5px;">Nama</label>
-                    <input type="text" id="nama" name="nama" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('nama') }}" required>
-                </div>
-                <div>
-                    <label for="nik" style="margin-bottom: 5px;">NIK</label>
-                    <input type="text" id="nik" name="nik" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('nik') }}" required>
-                </div>
-                <div>
-                    <label for="alamat" style="margin-bottom: 5px;">Alamat</label>
-                    <textarea id="alamat" name="alamat" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('alamat') }}" required></textarea>
-                </div>
-                <div>
-                    <label for="no_telp" style="margin-bottom: 5px;">Nomor Telepon</label>
-                    <input type="number" id="no_telp" name="no_telp" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('no_telp') }}" required>
-                </div>
-                <div>
-                    <label for="jenis_kelamin" style="margin-bottom: 5px;">Jenis Kelamin</label>
-                    <select id="jenis_kelamin" name="jenis_kelamin" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
-                        <option value="" {{ old('jenis_kelamin') == '' ? 'selected' : '' }}>-- Pilih --</option>
-                        <option value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                        <option value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                    <label for="jenis_keperluan" style="margin-bottom: 5px;">Jenis Keperluan</label>
+                    <select id="jenis_keperluan" name="jenis_keperluan" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                        <option value="">-- Pilih Keperluan --</option>
+                        //'Darurat','Kontrol Medis','Lainnya'
+                        <option value="Darurat" {{ $pengajuan->jenis_keperluan == 'Darurat' ? 'selected' : ''}}>Darurat</option>
+                        <option value="Kontrol Medis" {{ $pengajuan->jenis_keperluan == 'Kontrol Medis' ? 'selected' : ''}}>Kontrol Medis</option>
+                        <option value="Lainnya" {{ $pengajuan->jenis_keperluan == 'Lainnya' ? 'selected' : ''}}>Lainnya</option>
                     </select>
                 </div>
                 <div>
-                    <label for="tgl_lahir" style="margin-bottom: 5px;">Tanggal Lahir</label>
-                    <input type="date" id="tgl_lahir" name="tgl_lahir" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('tgl_lahir') }}" required>
+                    <label for="nama_pasien" style="margin-bottom: 5px;">Nama Pasien</label>
+                    <input type="text" id="nama_pasien" name="nama_pasien" value="{{ $pengajuan->nama_pasien }}" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
                 </div>
                 <div>
-                    <label for="tempat_lahir" style="margin-bottom: 5px;">Tempat Lahir</label>
-                    <input type="text" id="tempat_lahir" name="tempat_lahir" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('tempat_lahir') }}" required>
+                    <label for="no_hp" style="margin-bottom: 5px;">No Handphone/WA</label>
+                    <input type="number" id="no_hp" name="no_hp" value="{{ $pengajuan->no_hp }}" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                </div>
+                <div>
+                    <label for="tanggal" style="margin-bottom: 5px;">Tanggal Pengajuan</label>
+                    <input type="date" id="tanggal" name="tanggal" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                </div>
+                <div>
+                    <label for="waktu" style="margin-bottom: 5px;">Waktu Jemput</label>
+                    <input type="time" id="waktu" name="waktu" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                </div>
+                <div>
+                    <label for="alamat" style="margin-bottom: 5px;">Alamat</label>
+                    <textarea type="text" id="alamat" name="alamat" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required></textarea>
+                </div>
+                <div>
+                    <label for="status" style="margin-bottom: 5px;">Status</label>
+                    <select id="status" name="status" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
+                        <option value="">-- Pilih Keperluan --</option>
+                        <option value="Diproses" {{ $pengajuan->status == 'Diproses' ? 'selected' : ''}}>Diproses</option>
+                        <option value="Berjalan" {{ $pengajuan->status == 'Berjalan' ? 'selected' : ''}}>Berjalan</option>
+                        <option value="Selesai" {{ $pengajuan->status == 'Selesai' ? 'selected' : ''}}>Selesai</option>
+                        <option value="Ditolak" {{ $pengajuan->status == 'Ditolak' ? 'selected' : ''}}>Ditolak</option>
+                    </select>
                 </div>
             </div>
-            <button type="submit" style="background-color: #007bff; margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Simpan Data Pasien</button>
+            <button type="submit" style="background-color: #007bff; margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Simpan Data Jadwal</button>
         </form>
-        <a href="{{ route('admin.pasien') }}"><button type="button" style="background-color:rgb(255, 0, 0); margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Kembali</button></a>
+        <a href="{{ route('admin.ambulans') }}"><button type="button" style="background-color:rgb(255, 0, 0); margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Kembali</button></a>
     </div>
 </body>
 

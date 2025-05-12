@@ -58,7 +58,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::match(['get', 'post'], '/admin/tambah-jadwal-dokter', [AdminController::class, 'tambahJadwalDokter'])->name('admin.tambah-jadwal-dokter');
     Route::match(['get', 'post'], '/admin/edit-jadwal-dokter/{id}', [AdminController::class, 'editJadwalDokter'])->name('admin.edit-jadwal-dokter');
     Route::get('/admin/hapus-jadwal-dokter/{id}', [AdminController::class, 'hapusJadwalDokter'])->name('admin.hapus-jadwal-dokter');
+    
+    //pengajuan ambulance
+    Route::match(['get', 'post'], '/admin/ambulans', [AdminController::class, 'PengajuanAmbulans'])->name('admin.ambulans');
+    Route::match(['get', 'post'], '/admin/tambah-pengajuan-ambulans', [AdminController::class, 'tambahPengajuanAmbulans'])->name('admin.tambah-pengajuan-ambulans');
+    Route::match(['get', 'post'], '/admin/edit-pengajuan-ambulans/{id}', [AdminController::class, 'editPengajuanAmbulans'])->name('admin.edit-pengajuan-ambulans');
+    Route::get('/admin/hapus-pengajuan-ambulans/{id}', [AdminController::class, 'hapusPengajuanAmbulans'])->name('admin.hapus-pengajuan-ambulans');
 
-    Route::match(['get', 'post'], '/admin/ambulans', [AdminController::class, 'ambulans'])->name('admin.ambulans');
+    // Route::match(['get', 'post'], '/admin/ambulans', [AdminController::class, 'ambulans'])->name('admin.ambulans');
     Route::match(['get', 'post'], '/admin/profil', [AdminController::class, 'profil'])->name('admin.profil');
 });

@@ -157,7 +157,7 @@
             <li><a href="{{ route('admin.profil') }}">Profil</a></li>
             <li><a href="{{ route('logout') }}">Logout</a></li>
         </ul>
-        <img src="https://via.placeholder.com/200x150" alt="Sistem Informasi Rekam Medis">
+        <img src="{{ asset('img/ill_sidebar.svg') }}" alt="Sistem Informasi Rekam Medis">
     </div>
     <div class="container">
         <h1>Data Obat</h1>

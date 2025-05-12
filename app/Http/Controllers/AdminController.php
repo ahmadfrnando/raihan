@@ -6,8 +6,10 @@ use App\Models\Dokter;
 use App\Models\JadwalDokter;
 use App\Models\Obat;
 use App\Models\Pasien;
+use App\Models\PengajuanAmbulan;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -320,8 +322,8 @@ class AdminController extends Controller
     {
         if ($request->isMethod('get')) {
             $jadwal = JadwalDokter::with('dokter')->get();
-            $dokter = Dokter::all();
-            return view('admin.jadwal-dokter', compact('jadwal', 'dokter'));
+            // $dokter = Dokter::all();
+            return view('admin.jadwal-dokter', compact('jadwal'));
         }
     }
 
@@ -347,9 +349,9 @@ class AdminController extends Controller
                     'waktu_mulai' => $data['waktu_mulai'],
                     'waktu_selesai' => $data['waktu_selesai'],
                 ]);
-                return redirect()->route('admin.edit-jadwal-dokter')->with('success', 'Data jadwal dokter berhasil ditambahkan');
+                return redirect()->route('admin.jadwal-dokter')->with('success', 'Data jadwal dokter berhasil ditambahkan');
             } catch (\Throwable $th) {
-                return redirect()->route('admin.edit-jadwal-dokter')->with('error', 'Data jadwal dokter gagal ditambahkan ' . $th->getMessage())->withInput();
+                return redirect()->route('admin.jadwal-dokter')->with('error', 'Data jadwal dokter gagal ditambahkan ' . $th->getMessage())->withInput();
             }
         }
     }
@@ -377,9 +379,9 @@ class AdminController extends Controller
                     'waktu_mulai' => $data['waktu_mulai'],
                     'waktu_selesai' => $data['waktu_selesai'],
                 ]);
-                return redirect()->route('admin.edit-jadwal-dokter', $id)->with('success', 'Data jadwal dokter berhasil diubah');
+                return redirect()->route('admin.jadwal-dokter')->with('success', 'Data jadwal dokter berhasil diubah');
             } catch (\Throwable $th) {
-                return redirect()->route('admin.edit-jadwal-dokter', $id)->with('error', 'Data jadwal dokter gagal diubah ' . $th->getMessage());
+                return redirect()->route('admin.jadwal-dokter')->with('error', 'Data jadwal dokter gagal diubah ' . $th->getMessage());
             }
         }
     }
@@ -394,12 +396,105 @@ class AdminController extends Controller
         }
     }
 
-    public function ambulans(Request $request)
+     public function pengajuanAmbulans(Request $request)
     {
         if ($request->isMethod('get')) {
-            return view('admin.data-pasien');
+            $pengajuan = PengajuanAmbulan::all();
+            return view('admin.pengajuan-ambulans', compact('pengajuan'));
+        }
+
+        if ($request->isMethod('post')) {
+            // Validasi data yang diterima dari frontend
+            $data = $request->validate([
+                'id' => 'required|exists:pasien,id',
+                'status' => 'required|string|in:Diprosess,Ditolak,Berjalan,Selesai'
+            ]);
+
+            // Temukan pasien berdasarkan ID dan perbarui statusnya
+            $pengajuan = PengajuanAmbulan::find($data['id']);
+            if ($pengajuan) {
+                $pengajuan->status = $data['status'];
+                $pengajuan->save();
+
+                // Mengirim respons sebagai JSON
+                return response()->json([
+                    'message' => 'Status pengajuan berhasil diperbarui',
+                    'status' => $pengajuan->status
+                ]);
+            }
+
+            // Jika pasien tidak ditemukan
+            return response()->json([
+                'message' => 'Pengajuan tidak ditemukan'
+            ], 404);
         }
     }
+
+    public function tambahPengajuanAmbulans(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            return view('admin.form-tambah-pengajuan-ambulans');
+        }
+
+        if ($request->isMethod('post')) {
+            try {
+                $data = $request->validate([
+                    'nama_pasien' => 'required|string|max:50',
+                    'alamat' => 'required|string',
+                    'no_hp' => 'required|numeric',
+                    'tanggal' => 'required|date',
+                    'waktu' => 'required|date_format:H:i',
+                    'jenis_keperluan' => 'required|in:Darurat,Kontrol Medis,Lainnya',
+                    'status' => 'required|in:Diproses,Berjalan,Selesai,Ditolak',
+                ]);
+                $data['id_user'] = Auth::user()->id;
+
+                PengajuanAmbulan::create($data);
+
+                return redirect()->route('admin.ambulans')->with('success', 'Data pengajuan ambulans berhasil ditambahkan');
+            } catch (\Throwable $th) {
+                return redirect()->route('admin.ambulans')->with('error', 'Data pengajuan ambulans gagal ditambahkan ' . $th->getMessage())->withInput();
+            }
+        }
+    }
+
+    public function editPengajuanAmbulans(Request $request, $id)
+    {
+        if ($request->isMethod('get')) {
+            $pengajuan = PengajuanAmbulan::find($id);
+            return view('admin.form-edit-pengajuan-ambulans', compact('pengajuan'));
+        }
+
+        if ($request->isMethod('post')) {
+            try {
+                $data = $request->validate([
+                    'nama_pasien' => 'required|string|max:50',
+                    'alamat' => 'required|string',
+                    'no_hp' => 'required|numeric',
+                    'tanggal' => 'required|date',
+                    'waktu' => 'required|date_format:H:i',
+                    'jenis_keperluan' => 'required|in:Darurat,Kontrol Medis,Lainnya',
+                    'status' => 'required|in:Diproses,Berjalan,Selesai,Ditolak',
+                ]);
+
+                PengajuanAmbulan::where('id', $id)->update($data);
+                return redirect()->route('admin.ambulans')->with('success', 'Data pengajuan berhasil diubah');
+            } catch (\Throwable $th) {
+                return redirect()->route('admin.ambulans')->with('error', 'Data pengajuan gagal diubah ' . $th->getMessage());
+            }
+        }
+    }
+
+    public function hapusPengajuanAmbulans($id)
+    {
+        try {
+            PengajuanAmbulan::where('id', $id)->delete();
+            return redirect()->route('admin.ambulans')->with('success', 'Data pengajuan ambulans berhasil dihapus');
+        } catch (\Throwable $th) {
+            return redirect()->route('admin.ambulans')->with('error', 'Data pengajuan ambulans gagal dihapus ' . $th->getMessage());
+        }
+    }
+
     public function profil(Request $request)
     {
         if ($request->isMethod('get')) {

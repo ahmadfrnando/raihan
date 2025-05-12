@@ -174,7 +174,7 @@
             <li><a href="{{ route('admin.profil') }}">Profil</a></li>
             <li><a href="{{ route('logout') }}">Logout</a></li>
         </ul>
-        <img src="https://via.placeholder.com/200x150" alt="Sistem Informasi Rekam Medis">
+        <img src="{{ asset('img/ill_sidebar.svg') }}" alt="Sistem Informasi Rekam Medis">
     </div>
     <div class="container">
         @if(session()->has('success'))
@@ -202,7 +202,7 @@
                 </div>
                 <div>
                     <label for="spesialis" style="margin-bottom: 5px;">Spesialis</label>
-                    <input id="spesialis" name="spesialis" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"  value="{{ old('spesialis') }}" required/>
+                    <input id="spesialis" name="spesialis" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('spesialis') }}" required />
                 </div>
                 <div>
                     <label for="foto_dokter" style="margin-bottom: 5px;">Foto Dokter (*maks 2Mb)</label>
