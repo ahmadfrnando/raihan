@@ -126,7 +126,9 @@ class DokterController extends Controller
             $pasien = Pasien::where('id', $id_pasien)->first();
             $dokter = Dokter::where('id_user', Auth::user()->id)->first();
             $usia_pasien = now()->year - date('Y', strtotime($pasien->tgl_lahir));
-            $id_user = PengajuanBerobat::where('nomor_antrian', $pasien->nomor_antrian)->first()->id_user;
+            $pengajuan = PengajuanBerobat::where('nomor_antrian', $pasien->nomor_antrian)->first();
+            $id_user = $pengajuan->id_user;
+            $jenis_pelayanan = $pengajuan->jenis_pelayanan;
             Pemeriksaan::create([
                 'id_pasien' => $pasien->id,
                 'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
@@ -137,7 +139,8 @@ class DokterController extends Controller
                 'nama_dokter' => $dokter->nama_dokter,
                 'usia_pasien' => $usia_pasien,
                 'catatan' => $request->catatan,
-                'id_user' => $id_user
+                'id_user' => $id_user,
+                'jenis_pelayanan' => $jenis_pelayanan
             ]);
             return back()->with('success', 'Pemeriksaan berhasil disimpan');
         } catch (\Throwable $th) {
