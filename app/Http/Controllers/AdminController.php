@@ -177,6 +177,7 @@ class AdminController extends Controller
                     'password' => Hash::make('123'),
                     'role' => 'dokter',
                     'email' => $data['nip'] . '@test.com',
+                    'pin' => $data['nip'],
                 ]);
 
                 Dokter::create([
