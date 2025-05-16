@@ -135,7 +135,7 @@
                     <td>{{ $h->tanggal_pemeriksaan }}</td>
                     <td>{{ $h->nama_dokter ?? '-' }}</td>
                     <td>{{ $h->jenis_pelayanan }}</td>
-                    <td><a href="{{ asset('storage/'.$h->file) }}" target="_blank" class="download-button">Unduh</a></td>
+                    <td><a href="{{ asset('storage/'.$h->file_pemeriksaan) }}" target="_blank" class="download-button">Unduh</a></td>
                 </tr>
                 @endforeach
             </tbody>
