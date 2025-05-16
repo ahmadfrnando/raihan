@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'username',
         'role',
+        'pin'
     ];
 
     public function getRoleAttribute()
