@@ -26,6 +26,9 @@ class DokterController extends Controller
         if ($request->isMethod('get')) {
             $jadwal = JadwalDokter::where('id_dokter', $dokter->id)->first();
             $isHadir = $jadwal->is_hadir;
+            if(!$isHadir){
+                return back()->with('error', 'Jadwal Dokter Belum Tersedia. Minta admin untuk buatkan jadwal');
+            }
             switch ($isHadir) {
                 case 0:
                     $status = 'Pulang';
