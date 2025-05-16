@@ -198,7 +198,7 @@
                 </div>
                 <div>
                     <label for="status" style="margin-bottom: 5px;">Kondisi</label>
-                    <select class="status-select dirawat" name="status">
+                    <select class="status-select dirawat" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" name="status">
                         <option value="">Pilih Status</option>
                         <option value="dirawat">🏥 Dirawat</option>
                         <option value="sembuh">✅ Sembuh</option>
