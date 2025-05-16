@@ -202,7 +202,7 @@
                 </div>
                 <div>
                     <label for="pin" style="margin-bottom: 5px;">PIN (Masukkan 6 digit)</label>
-                    <input id="pin" name="pin" type="password" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('pin') }}" required />
+                    <input id="pin" name="pin" type="number" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('pin') }}" required />
                 </div>
                 <div>
                     <label for="spesialis" style="margin-bottom: 5px;">Spesialis</label>

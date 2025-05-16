@@ -166,7 +166,7 @@ class AdminController extends Controller
                     'nip' => 'required|string|unique:dokter,nip',
                     'spesialis' => 'required|string',
                     'foto_dokter' => 'required|mimes:jpg,jpeg,png|max:2048',
-                    'pin' => 'required|numeric|min:6',
+                    'pin' => 'required|numeric|digits:6',
                 ]);
                 $file = $request->file('foto_dokter');
                 $fileName = $file->hashName();
