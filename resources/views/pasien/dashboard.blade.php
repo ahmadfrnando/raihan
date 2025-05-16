@@ -98,6 +98,11 @@
         <div class="d-flex flex-wrap justify-content-center">
             <!-- Card Berobat -->
             <div class="card">
+                <i class="bi bi-clipboard-data" aria-label="Ikon Berobat"></i>
+                <h4>No Antrian</h4>
+                <a href="{{ route('pasien.antrian') }}" class="btn-dashboard">Daftar Antrian</a>
+            </div>
+            <div class="card">
                 <i class="bi bi-house-door" aria-label="Ikon Berobat"></i>
                 <h4>Berobat</h4>
                 <a href="{{ route('pasien.berobat') }}" class="btn-dashboard">Pengajuan Berobat</a>

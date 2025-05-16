@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Dokter;
 use App\Models\HasilPemeriksaan;
 use App\Models\JadwalDokter;
+use App\Models\Pemeriksaan;
 use App\Models\PengajuanAmbulan;
 use App\Models\PengajuanBerobat;
 use App\Models\PengambilanObat;
@@ -20,10 +21,16 @@ class PasienController extends Controller
         return view('pasien.dashboard');
     }
 
+    public function antrian()
+    {   
+        $antrian = PengajuanBerobat::where('id_user', Auth::user()->id)->orderBy('created_at', 'desc')->paginate(2);
+        return view('pasien.antrian', compact('antrian'));
+    }
+
     public function berobat(Request $request)
     {
         if ($request->isMethod('get')) {
-            return view('pasien.berobat');
+            return view('pasien.berobat', compact('pengajuan'));
         }
 
         try {
@@ -119,7 +126,8 @@ class PasienController extends Controller
 
     public function hasilPemeriksaan()
     {   
-        $hasil = HasilPemeriksaan::where('id_pasien', Auth::user()->id)->get();
+        // $hasil = HasilPemeriksaan::where('id_pasien', Auth::user()->id)->where('id_user')->get();
+        $hasil = Pemeriksaan::where('id_user', Auth::user()->id)->get();
         return view('pasien.hasil-pemeriksaan', compact('hasil'));
     }
 
@@ -132,7 +140,7 @@ class PasienController extends Controller
 
     public function daftarResep()
     {   
-        $resep = ResepObat::where('id_pasien', Auth::user()->id)->get();
+        $resep = ResepObat::where('id_user', Auth::user()->id)->get();
         return view('pasien.daftar-resep', compact('resep'));
     }
 }

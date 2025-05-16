@@ -19,6 +19,7 @@ Route::middleware(['auth', 'role:pasien'])->group(function () {
     Route::get('/hasil-pemeriksaan', [PasienController::class, 'hasilPemeriksaan'])->name('pasien.hasil-pemeriksaan');
     Route::get('/daftar-hadir-dokter', [PasienController::class, 'daftarHadirDokter'])->name('pasien.daftar-hadir-dokter');
     Route::get('/daftar-resep', [PasienController::class, 'daftarResep'])->name('pasien.daftar-resep');
+    Route::get('/antrian', [PasienController::class, 'antrian'])->name('pasien.antrian');
 });
 
 Route::middleware(['auth', 'role:dokter'])->group(function () {

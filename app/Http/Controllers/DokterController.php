@@ -6,6 +6,7 @@ use App\Models\Dokter;
 use App\Models\JadwalDokter;
 use App\Models\Pasien;
 use App\Models\Pemeriksaan;
+use App\Models\PengajuanBerobat;
 use App\Models\ResepObat;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -76,6 +77,8 @@ class DokterController extends Controller
                 'total_harga' => 'required|numeric'
             ]);
             $dokter = Dokter::where('id_user', Auth::user()->id)->first();
+            $nomor_antrian = Pasien::where('id', $id_pasien)->first()->nomor_antrian;
+            $id_user = PengajuanBerobat::where('nomor_antrian', $nomor_antrian)->first()->id_user;
 
             $waktu_absensi = now();
             ResepObat::create([
@@ -84,7 +87,8 @@ class DokterController extends Controller
                 'total_harga' => $request->total_harga,
                 'deskripsi_obat' => $request->deskripsi_obat,
                 'catatan' => $request->catatan,
-                'file_resep' => $request->file('file_resep') ? $request->file('file_resep')->store('resep', 'public') : null
+                'file_resep' => $request->file('file_resep') ? $request->file('file_resep')->store('resep', 'public') : null,
+                'id_user' => $id_user
             ]);
             return back()->with('success', 'Anda telah melakukan input resep obat')->withInput();
         } catch (\Throwable $th) {
@@ -122,6 +126,7 @@ class DokterController extends Controller
             $pasien = Pasien::where('id', $id_pasien)->first();
             $dokter = Dokter::where('id_user', Auth::user()->id)->first();
             $usia_pasien = now()->year - date('Y', strtotime($pasien->tgl_lahir));
+            $id_user = PengajuanBerobat::where('nomor_antrian', $pasien->nomor_antrian)->first()->id_user;
             Pemeriksaan::create([
                 'id_pasien' => $pasien->id,
                 'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
@@ -131,7 +136,8 @@ class DokterController extends Controller
                 'nama_pasien' => $pasien->nama,
                 'nama_dokter' => $dokter->nama_dokter,
                 'usia_pasien' => $usia_pasien,
-                'catatan' => $request->catatan
+                'catatan' => $request->catatan,
+                'id_user' => $id_user
             ]);
             return back()->with('success', 'Pemeriksaan berhasil disimpan');
         } catch (\Throwable $th) {

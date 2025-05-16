@@ -193,6 +193,10 @@
             @csrf
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
                 <div>
+                    <label for="nomor_antrian" style="margin-bottom: 5px;">No Antrian</label>
+                    <input type="text" id="nomor_antrian" name="nomor_antrian" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('nama') }}" required>
+                </div>
+                <div>
                     <label for="nama" style="margin-bottom: 5px;">Nama</label>
                     <input type="text" id="nama" name="nama" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('nama') }}" required>
                 </div>

@@ -76,6 +76,7 @@ class AdminController extends Controller
                     'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
                     'tempat_lahir' => 'required|string',
                     'tgl_lahir' => 'required|date',
+                    'nomor_antrian' => 'required|string|unique:pengajuan_berobat,nomor_antrian',
                 ]);
 
                 $usia = date('Y') - date('Y', strtotime($data['tgl_lahir']));
@@ -89,6 +90,7 @@ class AdminController extends Controller
                     'tempat_lahir' => $data['tempat_lahir'],
                     'tgl_lahir' => $data['tgl_lahir'],
                     'usia' => $usia,
+                    'nomor_antrian' => $data['nomor_antrian'],
                 ]);
                 return redirect()->route('admin.tambah-pasien')->with('success', 'Data pasien berhasil ditambahkan');
             } catch (\Throwable $th) {
