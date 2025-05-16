@@ -7,6 +7,7 @@ use App\Models\JadwalDokter;
 use App\Models\Obat;
 use App\Models\Pasien;
 use App\Models\PengajuanAmbulan;
+use App\Models\ProfileKlinik;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -396,7 +397,7 @@ class AdminController extends Controller
         }
     }
 
-     public function pengajuanAmbulans(Request $request)
+    public function pengajuanAmbulans(Request $request)
     {
         if ($request->isMethod('get')) {
             $pengajuan = PengajuanAmbulan::all();
@@ -498,7 +499,26 @@ class AdminController extends Controller
     public function profil(Request $request)
     {
         if ($request->isMethod('get')) {
-            return view('admin.data-pasien');
+
+            $profile = ProfileKlinik::firstOrFail();
+            return view('admin.profil-admin', compact('profile'));
+        }
+
+        if ($request->isMethod('post')) {
+            try {
+                $data = $request->validate([
+                    'nama_klinik' => 'required|string',
+                    'alamat' => 'required|string',
+                    'no_telp' => 'required|numeric',
+                    'email' => 'required|email',
+                    'deskripsi' => 'required|string',
+                ]);
+
+                ProfileKlinik::firstOrFail()->update($data);
+                return redirect()->route('admin.profil')->with('success', 'Data profil berhasil diubah');
+            } catch (\Throwable $th) {
+                return redirect()->route('admin.profil')->with('error', 'Data profil gagal diubah ' . $th->getMessage());
+            }
         }
     }
 }

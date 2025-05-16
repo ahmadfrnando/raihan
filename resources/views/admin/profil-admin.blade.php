@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -88,7 +89,8 @@
             margin-bottom: 5px;
         }
 
-        .profile-item span, .profile-item input {
+        .profile-item span,
+        .profile-item input {
             display: block;
             font-size: 16px;
             width: 100%;
@@ -107,7 +109,8 @@
             margin-top: 20px;
         }
 
-        .edit-button, .save-button {
+        .edit-button,
+        .save-button {
             padding: 10px 15px;
             font-size: 14px;
             color: #fff;
@@ -119,109 +122,98 @@
             transition: background-color 0.3s;
         }
 
-        .edit-button:hover, .save-button:hover {
+        .edit-button:hover,
+        .save-button:hover {
             background-color: #0056b3;
         }
 
         .save-button {
             display: none;
         }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .alert-success {
+            background-color: #28a745;
+            color: #ffffff;
+        }
+
+        .alert-error {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+
+        textarea {
+            font-size: 16px;
+            resize: none;
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <h2>Puskesmas Binjai Estate</h2>
         <ul>
-            <li><a href="dashboard Admin.html">Dashboard</a></li>
-            <li><a href="data pasien.html">Data Pasien</a></li>
-            <li><a href="data obat.html">Data Obat</a></li>
-            <li><a href="jadwal dokter.html" class="active">Jadwal Dokter</a></li>
-            <li><a href="Laporan pengajuan ambulance.html">Pengajuan Ambulance</a></li>
-            <li><a href="profil admin.html">Profil</a></li>
-            <li><a href="logout.html">Logout</a></li>
-        </ul>   
-        <img src="https://via.placeholder.com/200x150" alt="Sistem Informasi Rekam Medis">
+            <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ route('admin.pasien') }}">Data Pasien</a></li>
+            <li><a href="{{ route('admin.obat') }}">Data Obat</a></li>
+            <li><a href="{{ route('admin.dokter') }}">Dokter</a></li>
+            <li><a href="{{ route('admin.jadwal-dokter') }}">Jadwal Dokter</a></li>
+            <li><a href="{{ route('admin.ambulans') }}">Pengajuan Ambulance</a></li>
+            <li><a href="{{ route('admin.profil') }}" class="active">Profil</a></li>
+            <li><a href="{{ route('logout') }}">Logout</a></li>
+        </ul>
+        <img src="{{ asset('img/ill_sidebar.svg') }}" alt="Sistem Informasi Rekam Medis">
     </div>
     <div class="container">
+        @if(session()->has('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        @if(session()->has('error'))
+        <div class="alert alert-error">
+            {{ session('error') }}
+        </div>
+        @endif
         <div class="profile-container">
             <h1>Profil Puskesmas Binjai Estate</h1>
-            <div class="profile-item">
-                <label>Nama Klinik:</label>
-                <span id="clinic-name">Klinik Sehat Sentosa</span>
-                <input type="text" id="edit-clinic-name" value="Klinik Sehat Sentosa" style="display: none;">
-            </div>
-            <div class="profile-item">
-                <label>Alamat:</label>
-                <span id="clinic-address">Jl. Merdeka No. 123, Jakarta</span>
-                <input type="text" id="edit-clinic-address" value="Jl. Merdeka No. 123, Jakarta" style="display: none;">
-            </div>
-            <div class="profile-item">
-                <label>Telepon:</label>
-                <span id="clinic-phone">021-12345678</span>
-                <input type="text" id="edit-clinic-phone" value="021-12345678" style="display: none;">
-            </div>
-            <div class="profile-item">
-                <label>Email:</label>
-                <span id="clinic-email">info@kliniksehat.com</span>
-                <input type="text" id="edit-clinic-email" value="info@kliniksehat.com" style="display: none;">
-            </div>
-            <div class="profile-item">
-                <label>Deskripsi:</label>
-                <span id="clinic-description">Klinik Sehat Sentosa adalah pusat layanan kesehatan yang berkomitmen memberikan pelayanan terbaik untuk pasien.</span>
-                <textarea id="edit-clinic-description" style="display: none;">Klinik Sehat Sentosa adalah pusat layanan kesehatan yang berkomitmen memberikan pelayanan terbaik untuk pasien.</textarea>
-            </div>
-            <div class="edit-profile">
-                <button class="edit-button" onclick="editProfile()">Edit Profil</button>
-                <button class="save-button" onclick="saveProfile()">Simpan Perubahan</button>
-            </div>
+            <form action="{{ route('admin.profil') }}" method="POST">
+                @csrf
+                <div class="profile-item">
+                    <label>Nama Klinik:</label>
+                    <input type="text" id="edit-clinic-name" value="{{ $profile->nama_klinik }}" name="nama_klinik">
+                </div>
+                <div class="profile-item">
+                    <label>Alamat:</label>
+                    <input type="text" id="edit-clinic-address" value="{{ $profile->alamat }}" name="alamat">
+                </div>
+                <div class="profile-item">
+                    <label>Telepon:</label>
+                    <input type="text" id="edit-clinic-phone" value="{{ $profile->no_telp }}" name="no_telp">
+                </div>
+                <div class="profile-item">
+                    <label>Email:</label>
+                    <input type="email" id="edit-clinic-email" value="{{ $profile->email }}" name="email">
+                </div>
+                <div class="profile-item">
+                    <label>Deskripsi:</label>
+                    <textarea class="form-control" name="deskripsi">{{ $profile->deskripsi }}</textarea>
+                </div>
+                <button class="edit-button" type="submit">Simpan Perubahan</button>
+            </form>
         </div>
     </div>
-
-    <script>
-        function editProfile() {
-            // Menyembunyikan teks dan menampilkan input fields
-            document.getElementById('clinic-name').style.display = 'none';
-            document.getElementById('clinic-address').style.display = 'none';
-            document.getElementById('clinic-phone').style.display = 'none';
-            document.getElementById('clinic-email').style.display = 'none';
-            document.getElementById('clinic-description').style.display = 'none';
-
-            document.getElementById('edit-clinic-name').style.display = 'block';
-            document.getElementById('edit-clinic-address').style.display = 'block';
-            document.getElementById('edit-clinic-phone').style.display = 'block';
-            document.getElementById('edit-clinic-email').style.display = 'block';
-            document.getElementById('edit-clinic-description').style.display = 'block';
-
-            // Menampilkan tombol simpan dan menyembunyikan tombol edit
-            document.querySelector('.edit-button').style.display = 'none';
-            document.querySelector('.save-button').style.display = 'block';
-        }
-
-        function saveProfile() {
-            // Menyimpan data yang diperbarui
-            document.getElementById('clinic-name').textContent = document.getElementById('edit-clinic-name').value;
-            document.getElementById('clinic-address').textContent = document.getElementById('edit-clinic-address').value;
-            document.getElementById('clinic-phone').textContent = document.getElementById('edit-clinic-phone').value;
-            document.getElementById('clinic-email').textContent = document.getElementById('edit-clinic-email').value;
-            document.getElementById('clinic-description').textContent = document.getElementById('edit-clinic-description').value;
-
-            // Menyembunyikan input fields dan menampilkan teks profil
-            document.getElementById('edit-clinic-name').style.display = 'none';
-            document.getElementById('edit-clinic-address').style.display = 'none';
-            document.getElementById('edit-clinic-phone').style.display = 'none';
-            document.getElementById('edit-clinic-email').style.display = 'none';
-            document.getElementById('edit-clinic-description').style.display = 'none';
-
-            document.getElementById('clinic-name').style.display = 'block';
-            document.getElementById('clinic-address').style.display = 'block';
-            document.getElementById('clinic-phone').style.display = 'block';
-            document.getElementById('clinic-email').style.display = 'block';
-            document.getElementById('clinic-description').style.display = 'block';
-
-            // Menyembunyikan tombol simpan dan menampilkan tombol edit kembali
-            document.querySelector('.edit-button').style.display = 'block';
-            document.querySelector('.save-button').style.display = 'none';
-        }
-    </script>
 </body>
+
 </html>
