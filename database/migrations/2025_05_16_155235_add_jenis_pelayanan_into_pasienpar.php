@@ -23,9 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pasien', function (Blueprint $table) {
-            $table->date('tgl_lahir')->nullable();
-            $table->string('tempat_lahir')->nullable();
-        });
+        throw new \Exception('Tidak bisa di rollback');
     }
 };
