@@ -198,6 +198,7 @@
                     <th>Nama</th>
                     <th>Umur</th>
                     <th>Jenkel</th>
+                    <th>Kondisi</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
