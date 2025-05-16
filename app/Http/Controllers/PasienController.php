@@ -30,7 +30,7 @@ class PasienController extends Controller
     public function berobat(Request $request)
     {
         if ($request->isMethod('get')) {
-            return view('pasien.berobat', compact('pengajuan'));
+            return view('pasien.berobat');
         }
 
         try {
