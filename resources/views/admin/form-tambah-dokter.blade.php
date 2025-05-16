@@ -201,6 +201,10 @@
                     <input type="text" id="nama_dokter" name="nama_dokter" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('nama_dokter') }}" required>
                 </div>
                 <div>
+                    <label for="pin" style="margin-bottom: 5px;">PIN (Masukkan 6 digit)</label>
+                    <input id="pin" name="pin" type="password" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('pin') }}" required />
+                </div>
+                <div>
                     <label for="spesialis" style="margin-bottom: 5px;">Spesialis</label>
                     <input id="spesialis" name="spesialis" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('spesialis') }}" required />
                 </div>

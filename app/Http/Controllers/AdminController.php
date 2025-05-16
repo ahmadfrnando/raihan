@@ -166,6 +166,7 @@ class AdminController extends Controller
                     'nip' => 'required|string|unique:dokter,nip',
                     'spesialis' => 'required|string',
                     'foto_dokter' => 'required|mimes:jpg,jpeg,png|max:2048',
+                    'pin' => 'required|numeric|min:6',
                 ]);
                 $file = $request->file('foto_dokter');
                 $fileName = $file->hashName();
@@ -177,7 +178,7 @@ class AdminController extends Controller
                     'password' => Hash::make('123'),
                     'role' => 'dokter',
                     'email' => $data['nip'] . '@test.com',
-                    'pin' => $data['nip'],
+                    'pin' => $data['pin'],
                 ]);
 
                 Dokter::create([
