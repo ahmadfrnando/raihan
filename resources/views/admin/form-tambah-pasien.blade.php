@@ -196,6 +196,16 @@
                     <label for="nomor_antrian" style="margin-bottom: 5px;">No Antrian</label>
                     <input type="text" id="nomor_antrian" name="nomor_antrian" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('nama') }}" required>
                 </div>
+                <div>
+                    <label for="status" style="margin-bottom: 5px;">Kondisi</label>
+                    <select class="status-select dirawat" name="status">
+                        <option value="">Pilih Status</option>
+                        <option value="dirawat">🏥 Dirawat</option>
+                        <option value="sembuh">✅ Sembuh</option>
+                        <option value="operasi">🛠️ Operasi</option>
+                        <option value="kritis">🚨 Kritis</option>
+                    </select>
+                </div>
             </div>
             <button type="submit" style="background-color: #007bff; margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Simpan Data Pasien</button>
         </form>

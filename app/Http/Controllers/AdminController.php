@@ -71,17 +71,19 @@ class AdminController extends Controller
             try {
                 $data = $request->validate([
                     'nomor_antrian' => 'required|string|exists:pengajuan_berobat,nomor_antrian',
+                    'status' => 'required|string',
                 ]);
                 $pengajuan = PengajuanBerobat::where('nomor_antrian', $data['nomor_antrian'])->first();
                 Pasien::create([
-                    'nomor_antrian' => $pengajuan->nomor_antrian,
+                    'nomor_antrian' => $data['nomor_antrian'],
                     'nik' => $pengajuan->nik,
                     'nama' => $pengajuan->nama,
                     'usia' => $pengajuan->usia,
                     'no_telp' => $pengajuan->no_hp,
                     'alamat' => $pengajuan->alamat,
                     'jenis_pelayanan' => $pengajuan->jenis_pelayanan,
-                    'id_user' => $pengajuan->id_user
+                    'id_user' => $pengajuan->id_user,
+                    'status' => $data['status'],
                 ]);
                 return redirect()->route('admin.tambah-pasien')->with('success', 'Data pasien berhasil ditambahkan');
             } catch (\Throwable $th) {
