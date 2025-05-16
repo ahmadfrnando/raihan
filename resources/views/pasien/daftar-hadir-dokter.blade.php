@@ -80,7 +80,7 @@
         @else
         @foreach ($jadwalDokter as $j)
         <div class="card-dokter">
-            <h5><i class="bi bi-person-circle"></i> {{ $j->nama_dokter }}</h5>
+            <h5><i class="bi bi-person-circle"></i> {{ $j->dokter->nama_dokter }}</h5>
             <p>Spesialis {{ $j->spesialis }} | Jam Praktik: {{ date('H:i', strtotime($j->waktu_mulai)) }} - {{ date('H:i', strtotime($j->waktu_selesai)) }}</p>
             @if($j->waktu_absensi !== now()->format('Y-m-d'))
                 <span class="badge rounded-pill bg-danger">Belum Absen</span>

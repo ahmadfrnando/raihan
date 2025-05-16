@@ -79,6 +79,23 @@
         a {
             text-decoration: none;
         }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid transparent;
+        }
+
+        .alert-success {
+            background-color: #28a745;
+            color: #ffffff;
+        }
+
+        .alert-error {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
     </style>
 </head>
 
@@ -86,6 +103,38 @@
     <header class="text-center">
         <h1 class="fw-bold">Dasbor Dokter</h1>
     </header>
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="alert alert-error">
+        {{ session('error') }}
+    </div>
+    @endif
+
+    <style>
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid transparent;
+        }
+
+        .alert-success {
+            background-color: #28a745;
+            color: #ffffff;
+        }
+
+        .alert-error {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+    </style>
+
+
     <div class="container py-5">
         <div class="row g-4 justify-content-center">
             <!-- Absensi Dokter -->

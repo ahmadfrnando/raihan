@@ -27,4 +27,5 @@ class JadwalDokter extends Model
             7 => 'Minggu',
         };
     }
+
 }
