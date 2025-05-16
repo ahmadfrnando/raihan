@@ -196,38 +196,6 @@
                     <label for="nomor_antrian" style="margin-bottom: 5px;">No Antrian</label>
                     <input type="text" id="nomor_antrian" name="nomor_antrian" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('nama') }}" required>
                 </div>
-                <div>
-                    <label for="nama" style="margin-bottom: 5px;">Nama</label>
-                    <input type="text" id="nama" name="nama" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('nama') }}" required>
-                </div>
-                <div>
-                    <label for="nik" style="margin-bottom: 5px;">NIK</label>
-                    <input type="text" id="nik" name="nik" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('nik') }}" required>
-                </div>
-                <div>
-                    <label for="alamat" style="margin-bottom: 5px;">Alamat</label>
-                    <textarea id="alamat" name="alamat" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('alamat') }}" required></textarea>
-                </div>
-                <div>
-                    <label for="no_telp" style="margin-bottom: 5px;">Nomor Telepon</label>
-                    <input type="number" id="no_telp" name="no_telp" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('no_telp') }}" required>
-                </div>
-                <div>
-                    <label for="jenis_kelamin" style="margin-bottom: 5px;">Jenis Kelamin</label>
-                    <select id="jenis_kelamin" name="jenis_kelamin" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
-                        <option value="" {{ old('jenis_kelamin') == '' ? 'selected' : '' }}>-- Pilih --</option>
-                        <option value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                        <option value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="tgl_lahir" style="margin-bottom: 5px;">Tanggal Lahir</label>
-                    <input type="date" id="tgl_lahir" name="tgl_lahir" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('tgl_lahir') }}" required>
-                </div>
-                <div>
-                    <label for="tempat_lahir" style="margin-bottom: 5px;">Tempat Lahir</label>
-                    <input type="text" id="tempat_lahir" name="tempat_lahir" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('tempat_lahir') }}" required>
-                </div>
             </div>
             <button type="submit" style="background-color: #007bff; margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Simpan Data Pasien</button>
         </form>

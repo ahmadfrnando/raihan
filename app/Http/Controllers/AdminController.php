@@ -7,6 +7,7 @@ use App\Models\JadwalDokter;
 use App\Models\Obat;
 use App\Models\Pasien;
 use App\Models\PengajuanAmbulan;
+use App\Models\PengajuanBerobat;
 use App\Models\ProfileKlinik;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -69,28 +70,18 @@ class AdminController extends Controller
         if ($request->isMethod('post')) {
             try {
                 $data = $request->validate([
-                    'nama' => 'required|string',
-                    'nik' => 'required|string',
-                    'no_telp' => 'required|string',
-                    'alamat' => 'required|string',
-                    'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-                    'tempat_lahir' => 'required|string',
-                    'tgl_lahir' => 'required|date',
                     'nomor_antrian' => 'required|string|exists:pengajuan_berobat,nomor_antrian',
                 ]);
-
-                $usia = date('Y') - date('Y', strtotime($data['tgl_lahir']));
-
+                $pengajuan = PengajuanBerobat::where('nomor_antrian', $data['nomor_antrian'])->first();
                 Pasien::create([
-                    'nama' => $data['nama'],
-                    'nik' => $data['nik'],
-                    'no_telp' => $data['no_telp'],
-                    'alamat' => $data['alamat'],
-                    'jenis_kelamin' => $data['jenis_kelamin'],
-                    'tempat_lahir' => $data['tempat_lahir'],
-                    'tgl_lahir' => $data['tgl_lahir'],
-                    'usia' => $usia,
-                    'nomor_antrian' => $data['nomor_antrian'],
+                    'nomor_antrian' => $pengajuan->nomor_antrian,
+                    'nik' => $pengajuan->nik,
+                    'nama' => $pengajuan->nama,
+                    'usia' => $pengajuan->usia,
+                    'no_telp' => $pengajuan->no_hp,
+                    'alamat' => $pengajuan->alamat,
+                    'jenis_pelayanan' => $pengajuan->jenis_pelayanan,
+                    'id_user' => $pengajuan->id_user
                 ]);
                 return redirect()->route('admin.tambah-pasien')->with('success', 'Data pasien berhasil ditambahkan');
             } catch (\Throwable $th) {
