@@ -76,7 +76,7 @@ class AdminController extends Controller
                     'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
                     'tempat_lahir' => 'required|string',
                     'tgl_lahir' => 'required|date',
-                    'nomor_antrian' => 'required|string|unique:pengajuan_berobat,nomor_antrian',
+                    'nomor_antrian' => 'required|string|exists:pengajuan_berobat,nomor_antrian',
                 ]);
 
                 $usia = date('Y') - date('Y', strtotime($data['tgl_lahir']));
