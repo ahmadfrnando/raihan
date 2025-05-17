@@ -88,7 +88,7 @@
         @foreach ($resep as $j)
         <a href="/ambil-obat/{{ $j->id }}" style="text-decoration: none;">
             <div class="card-dokter">
-                <h5 style="color: white"><i class="bi bi-capsule"></i> {{ $j->dokter->nama_dokter }}</h5>
+                <h5 style="color: white"><i class="bi bi-capsule"></i> {{ $j->dokter->nama_dokter ?? '' }}</h5>
                 <p style="color: white;">Obat: {{ $j->deskripsi_obat }}</p>
                 <div>
                     <span style="color: white;">Status: </span>
