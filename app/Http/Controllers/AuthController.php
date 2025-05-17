@@ -23,22 +23,23 @@ class AuthController extends Controller
 
             $credentials = $request->only('username', 'password');
 
-            if (Auth::attempt($credentials)) {
-                $user = Auth::user();
+            Auth::attempt($credentials);
+            $user = Auth::user();
 
-                switch ($user->role) {
-                    case 'pasien':
-                        return redirect()->route('pasien.dashboard');
-                    case 'dokter':
-                        return redirect()->route('dokter.dashboard');
-                    case 'admin':
-                        return redirect()->route('admin.dashboard');
-                    default:
-                        Auth::logout();
-                }
+            switch ($user->role) {
+                case 'pasien':
+                    return redirect()->route('pasien.dashboard');
+                case 'dokter':
+                    return redirect()->route('dokter.dashboard');
+                case 'admin':
+                    return redirect()->route('admin.dashboard');
+                default:
+                    Auth::logout();
             }
+
+            return redirect()->route('login')->with('error', 'Login gagal. Silahkan coba lagi.')->withInput();
         } catch (\Throwable $th) {
-            return back()->with(['error' => $th->getMessage()])->withInput();
+            return redirect()->route('login')->with(['error' => $th->getMessage()]);
         }
     }
 
@@ -106,6 +107,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
+        session()->flush();
         return redirect()->route('login');
     }
 }

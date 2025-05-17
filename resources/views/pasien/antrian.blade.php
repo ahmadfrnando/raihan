@@ -86,12 +86,12 @@
     @else
 
     <div id="form-section" class="form-container">
-        @if (session('error'))
-        <div style="background-color:rgb(236, 31, 48); border-radius: 5px; padding: 10px; margin-bottom: 15px;">
-            {{ session('error') }}
-        </div>
-        @endif
         <h1>Pengajuan Berobat</h1>
+        @if($antrian->isempty())
+        <div style="background-color:rgb(236, 31, 48); border-radius: 5px; padding: 10px; margin-bottom: 15px;">
+            Anda belum memiliki antrian
+        </div>
+        @else
         @foreach($antrian as $a)
         <div class="card text-center" style="padding: 25px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); margin-bottom: 20px;">
             <h5 class="card-header" style="background-color: #0056b3; color: white; border-radius: 15px 15px 0 0;">Nomor Antrian Anda</h5>
@@ -110,12 +110,13 @@
                     <li class="page-item {{ $antrian->currentPage() == $i ? 'active' : '' }}">
                         <a class="page-link" href="{{ $antrian->url($i) }}">{{ $i }}</a>
                     </li>
-                @endfor
-                <li class="page-item {{ $antrian->hasMorePages() ? '' : 'disabled' }}">
-                    <a class="page-link" href="{{ $antrian->nextPageUrl() }}">Next</a>
-                </li>
+                    @endfor
+                    <li class="page-item {{ $antrian->hasMorePages() ? '' : 'disabled' }}">
+                        <a class="page-link" href="{{ $antrian->nextPageUrl() }}">Next</a>
+                    </li>
             </ul>
         </div>
+        @endif
         <a href="{{ route('pasien.dashboard') }}"><button class="btn-back">Kembali</button></a>
     </div>
     @endif
