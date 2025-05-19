@@ -9,8 +9,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #00bcd4, #0097a7);
-            background-image: url('asset/Selamat datang.png');
+            /* background: linear-gradient(135deg, #00bcd4, #0097a7); */
+            background-image: url('img/bg.jpg');
+            /* background-image: url('asset/Selamat datang.png'); */
             background-size: cover;
             height: 100vh;
             color: white;
@@ -72,7 +73,6 @@
 </head>
 
 <body>
-
     <div class="login-container">
         @if (session('success'))
         <div style="background-color:rgb(3, 146, 84); border-radius: 5px; padding: 10px; margin-bottom: 15px;">
