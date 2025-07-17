@@ -189,45 +189,36 @@
         </div>
         @endif
         <h1>Edit Pasien</h1>
-        <form action="{{ route('admin.edit-pasien', $pasien->id) }}" method="POST">
+        <form action="{{ route('admin.edit-dokter', $dokter->id) }}" method="POST">
             @csrf
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
                 <div>
-                    <label for="nama" style="margin-bottom: 5px;">Nama</label>
-                    <input type="text" id="nama" name="nama" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ $pasien->nama }}" required>
+                    <label for="nip" style="margin-bottom: 5px;">NIP</label>
+                    <input type="number" id="nip" value="{{ old('nip', $dokter->nip) }}" name="nip" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('nip') }}" required>
                 </div>
                 <div>
-                    <label for="nik" style="margin-bottom: 5px;">NIK</label>
-                    <input type="text" id="nik" name="nik" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ $pasien->nik }}" required>
+                    <label for="nama_dokter" style="margin-bottom: 5px;">Nama Dokter</label>
+                    <input type="text" id="nama_dokter" value="{{ old('nama_dokter', $dokter->nama_dokter) }}" name="nama_dokter" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('nama_dokter') }}" required>
                 </div>
                 <div>
-                    <label for="alamat" style="margin-bottom: 5px;">Alamat</label>
-                    <textarea id="alamat" name="alamat" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>{{ $pasien->alamat }}</textarea>
+                    <label for="pin" style="margin-bottom: 5px;">PIN (Masukkan 6 digit)</label>
+                    <input id="pin" value="{{ old('pin', $dokter->pin) }}" name="pin" type="number" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('pin') }}" required />
                 </div>
                 <div>
-                    <label for="no_telp" style="margin-bottom: 5px;">Nomor Telepon</label>
-                    <input type="number" id="no_telp" name="no_telp" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ $pasien->no_telp }}" required>
+                    <label for="spesialis" style="margin-bottom: 5px;">Spesialis</label>
+                    <input id="spesialis" value="{{ old('spesialis', $dokter->spesialis) }}" name="spesialis" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ old('spesialis') }}" required />
                 </div>
+                @if($dokter->foto_dokter != null)
+                <img src="{{ asset('storage/foto-dokter/' . $dokter->foto_dokter) }}" alt="Foto Dokter" width="200px" >
+                @endif
                 <div>
-                    <label for="jenis_kelamin" style="margin-bottom: 5px;">Jenis Kelamin</label>
-                    <select id="jenis_kelamin" name="jenis_kelamin" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required>
-                        <option value="" {{ $pasien->jenis_kelamin == '' ? 'selected' : '' }}>-- Pilih --</option>
-                        <option value="Laki-laki" {{ $pasien->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                        <option value="Perempuan" {{ $pasien->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="tgl_lahir" style="margin-bottom: 5px;">Tanggal Lahir</label>
-                    <input type="date" id="tgl_lahir" name="tgl_lahir" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ $pasien->tgl_lahir }}" required>
-                </div>
-                <div>
-                    <label for="tempat_lahir" style="margin-bottom: 5px;">Tempat Lahir</label>
-                    <input type="text" id="tempat_lahir" name="tempat_lahir" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" value="{{ $pasien->tempat_lahir }}" required>
+                    <label for="foto_dokter" style="margin-bottom: 5px;">Foto Dokter (*maks 2Mb)</label>
+                    <input type="file" id="foto_dokter" name="foto_dokter" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" required accept=".jpg,.jpeg,.png">
                 </div>
             </div>
             <button type="submit" style="background-color: #007bff; margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Simpan Data Pasien</button>
         </form>
-        <a href="{{ route('admin.pasien') }}"><button type="button" style="background-color:rgb(255, 0, 0); margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Kembali</button></a>
+        <a href="{{ route('admin.dokter') }}"><button type="button" style="background-color:rgb(255, 0, 0); margin-top: 20px;color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">Kembali</button></a>
     </div>
 </body>
 
