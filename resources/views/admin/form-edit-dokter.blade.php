@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Pasien</title>
+    <title>Data Dokter</title>
     <style>
         * {
             margin: 0;
@@ -166,9 +166,9 @@
         <h2>Puskesmas Binjai Estate</h2>
         <ul>
             <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ route('admin.pasien') }}" class="active">Data Pasien</a></li>
+            <li><a href="{{ route('admin.pasien') }}">Data Pasien</a></li>
             <li><a href="{{ route('admin.obat') }}">Data Obat</a></li>
-            <li><a href="{{ route('admin.dokter') }}">Dokter</a></li>
+            <li><a href="{{ route('admin.dokter') }}" class="active">Dokter</a></li>
             <li><a href="{{ route('admin.jadwal-dokter') }}">Jadwal Dokter</a></li>
             <li><a href="{{ route('admin.ambulans') }}">Pengajuan Ambulance</a></li>
             <li><a href="{{ route('admin.profil') }}">Profil</a></li>
@@ -188,7 +188,7 @@
             {{ session('error') }}
         </div>
         @endif
-        <h1>Edit Pasien</h1>
+        <h1>Edit Dokter</h1>
         <form action="{{ route('admin.edit-dokter', $dokter->id) }}" method="POST">
             @csrf
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
